@@ -539,10 +539,10 @@
         let currentQuestionIdx = 0;
 
         const fallbackPlaceholders = {
-            '도로시_2.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Dorothy',
-            '허수아비_2.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Scarecrow',
-            '양철 나무꾼_2.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Tin+Woodman',
-            '겁쟁이 사자_2.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Cowardly+Lion'
+            '도로시.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Dorothy',
+            '허수아비.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Scarecrow',
+            '양철 나무꾼.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Tin+Woodman',
+            '겁쟁이 사자.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Cowardly+Lion'
         };
 
         function handleImageError(img) {
@@ -707,22 +707,22 @@
                 charName = '도로시'; charTitle = '용감한 개척자';
                 charDesc = "주변의 어떤 곤경에서도 길을 잃지 않고 앞으로 나아가며, 자신의 길을 직접 개척하는 강인한 영혼입니다. 본질적인 정서적 안정감을 바탕으로 목표를 위해 뚜렷한 주도성을 보여주는 모험가입니다.";
                 keywords = ["#용감한_개척자", "#목표_지향", "#강인한_의지", "#정면_돌파", "#자아_성장", "#안정적_애착", "#도전형_멘탈"];
-                imageFile = "도로시_2.png";
+                imageFile = "도로시.png";
             } else if (maxScore === scoreScarecrow) {
                 charName = '허수아비'; charTitle = '현명한 탐구자';
                 charDesc = "지혜와 논리를 소중히 여기며, 복잡한 위기가 닥쳤을 때 냉철한 사고와 뛰어난 분석력으로 돌파구를 마련합니다. 감정에 휩쓸리지 않고 항상 현실적인 대안(Plan B)을 모색하는 이성적인 전략가스타일 입니다.";
                 keywords = ["#현명한_탐구자", "#논리적_사고", "#분석적_해결", "#전략적_대처", "#이성적_통제", "#독립적_판단", "#신중파_멘탈"];
-                imageFile = "허수아비_2.png";
+                imageFile = "허수아비.png";
             } else if (maxScore === scoreLion) {
                 charName = '겁쟁이 사자'; charTitle = '용감한 행동가';
                 charDesc = "평소에는 조심스럽고 신중해 보이지만, 진짜 위기나 소중한 동료를 지켜야 하는 순간에는 누구보다 앞장서서 힘을 발휘하는 뜨거운 용기를 감추고 있습니다. 실천적 의리가 뛰어난 행동파스타일 입니다.";
                 keywords = ["#내재된_용기", "#강력한_추진력", "#정직한_소통", "#위기_극복", "#동료애", "#독립형_스타일", "#성장형_멘탈"];
-                imageFile = "겁쟁이 사자_2.png";
+                imageFile = "겁쟁이 사자.png";
             } else {
                 charName = '양철 나무꾼'; charTitle = '따뜻한 조율사';
                 charDesc = "관계와 사회생활 속에서 정서적인 교류와 깊은 공감을 최고의 가치로 여깁니다. 주변 사람들과 따뜻한 유대감을 형성하고, 서로의 마음이 연결되어 있다고 느낄 때 안정감을 느끼는 따뜻한 치유자스타일 입니다.";
                 keywords = ["#영리한_행동파", "#따뜻한_유대감", "#유혹_차단", "#전략적_우회", "#자기_신뢰", "#독립적_자아", "#성숙한_멘탈"];
-                imageFile = "양철 나무꾼_2.png";
+                imageFile = "양철 나무꾼.png";
             }
 
             globalCharacterReportName = charName;
