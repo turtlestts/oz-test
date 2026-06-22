@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나를 찾아 떠나는 모험 - 오즈의 마법사 심리검사</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: '#f4f6f4',
+                            100: '#e5eae6',
+                            200: '#cbdad0',
+                            600: '#4a5c4e',
+                            700: '#3b4a3e',
+                            800: '#2c372f'
+                        },
+                        amber: {
+                            50: '#fefaf0',
+                            100: '#fdf3db',
+                            500: '#e5c158',
+                            600: '#ca9e2e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #faf7f2;
+            color: #333;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden text-slate-800">
+
+    <div class="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sage-600 via-amber-500 to-sage-800 z-50"></div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow flex items-center justify-center p-4 md:p-8 max-w-4xl mx-auto w-full">
+        
+        <div id="screen-info" class="w-full bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-slate-100 fade-in">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold tracking-widest text-sage-600 uppercase bg-sage-100 px-3 py-1.5 rounded-full">WHTB MIND TEST</span>
+                <h1 class="text-3xl md:text-4xl font-extrabold mt-3 text-sage-700 tracking-tight">나를 찾아 떠나는 모험</h1>
+                <p class="text-amber-600 font-serif italic text-lg mt-1">- 오즈의 마법사 -</p>
+                
+                <div class="mt-5 p-5 bg-amber-50 rounded-2xl border border-dashed border-amber-100 text-sm leading-relaxed text-sage-700 text-left max-w-2xl mx-auto">
+                    <span class="font-bold text-sage-800 block mb-1">📖 Opening Story</span>
+                    "탁한 회색빛 일상에 지쳐 눈을 감았다 뜬 순간, 당신은 동화 속 '오즈의 나라' 입구에 서 있습니다. 이제부터 당신은 도로시가 되어 나만의 모험을 완성하기 위한 특별한 여정을 떠나게 됩니다. 무의식 속 갈림길에서 내린 선택을 통해 내면의 진짜 나를 마주해 보세요."
+                </div>
+            </div>
+
+            <form id="form-user" onsubmit="event.preventDefault(); startTest();" class="space-y-6 max-w-xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">이름</label>
+                        <input type="text" id="user-name" required placeholder="홍길동" 
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-600 focus:border-transparent transition text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">나이</label>
+                        <input type="number" id="user-age" required min="1" max="120" placeholder="00" 
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-600 focus:border-transparent transition text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">MBTI</label>
+                        <input type="text" id="user-mbti" required pattern="[A-Za-z]{4}" placeholder="ENFP" maxlength="4"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-600 focus:border-transparent transition text-sm uppercase">
+                    </div>
+                </div>
+
+                <!-- Battery Selection -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">현재 나의 심리적 배터리 잔량</label>
+                    <div class="grid grid-cols-5 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="battery" value="100%" checked class="sr-only peer">
+                            <div class="py-2.5 text-center text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 peer-checked:bg-sage-600 peer-checked:text-white peer-checked:border-sage-600 transition">
+                                🔋 100%
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="battery" value="75%" class="sr-only peer">
+                            <div class="py-2.5 text-center text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 peer-checked:bg-sage-600 peer-checked:text-white peer-checked:border-sage-600 transition">
+                                ⚡ 75%
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="battery" value="50%" class="sr-only peer">
+                            <div class="py-2.5 text-center text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 peer-checked:bg-sage-600 peer-checked:text-white peer-checked:border-sage-600 transition">
+                                😐 50%
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="battery" value="25%" class="sr-only peer">
+                            <div class="py-2.5 text-center text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 peer-checked:bg-sage-600 peer-checked:text-white peer-checked:border-sage-600 transition">
+                                🔌 25%
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="battery" value="0%" class="sr-only peer">
+                            <div class="py-2.5 text-center text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 peer-checked:bg-sage-600 peer-checked:text-white peer-checked:border-sage-600 transition">
+                                🪫 0%
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-sage-600 text-white rounded-xl text-sm font-bold shadow-md hover:bg-sage-700 hover:shadow-lg transition">
+                        모험의 길로 나서기 <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="screen-questions" class="w-full bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-slate-100 hidden fade-in">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center text-xs font-bold text-slate-400 mb-2">
+                    <span id="question-progress-text">문항 1 / 12</span>
+                    <span id="question-percent-text">8%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div id="question-progress-bar" class="bg-sage-600 h-full transition-all duration-300" style="width: 8%"></div>
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="space-y-6">
+                <div class="text-xs font-bold text-amber-600 uppercase tracking-wider" id="question-category">1부: 노란 벽돌 길 위의 선택</div>
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 leading-snug" id="question-title">로딩중...</h2>
+                <p class="text-sm text-slate-500 leading-relaxed bg-slate-50 p-4 rounded-xl border-l-4 border-sage-600" id="question-scenario">로딩중...</p>
+
+                <div class="space-y-3" id="options-container">
+                    <!-- Options injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between mt-8 pt-4 border-t border-slate-100">
+                <button onclick="prevQuestion()" id="btn-prev" class="px-5 py-3 text-slate-500 hover:text-slate-800 text-sm font-semibold transition flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> 이전으로
+                </button>
+                <div class="text-xs text-slate-400 self-center">WHTB Mind Studio</div>
+            </div>
+        </div>
+
+        <div id="screen-descriptive" class="w-full bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-slate-100 hidden fade-in">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold tracking-widest text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full">2부: 집으로 돌아온 밤의 기록</span>
+                <h2 class="text-2xl font-extrabold text-slate-800 mt-3">내 방 침대 위에 누워 마주하는 자아 성찰</h2>
+                <p class="text-sm text-slate-500 mt-1">험난했던 모험을 끝내고 마침내 찾은 평화로운 시간, 내면에 남겨진 진짜 흔적을 가만히 적어봅니다.</p>
+            </div>
+
+            <div class="space-y-6 max-w-2xl mx-auto">
+                <div class="p-5 bg-sage-50 rounded-2xl border border-sage-100">
+                    <label class="block text-sm font-bold text-slate-800 mb-2">01. 내가 두고 온 것, 혹은 얻어온 것</label>
+                    <p class="text-xs text-slate-500 mb-3 leading-relaxed">오즈의 나라를 여행하는 동안 동료들은 각자의 결핍(지혜, 심장, 용기)을 채웠습니다. 당신이 이번 여행(혹은 최근의 일상)을 통해 새롭게 얻게 된 내면의 가치는 무엇인가요? 반대로, 그곳에 기꺼이 두고 오고 싶었던 나의 무거운 마음(불안, 미련 등)이 있다면 적어주세요.</p>
+                    <textarea id="desc-1" required rows="3" placeholder="내 생각과 감정을 솔직하게 적어주세요..." 
+                        class="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-600 focus:border-transparent transition"></textarea>
+                </div>
+
+                <div class="p-5 bg-sage-50 rounded-2xl border border-sage-100">
+                    <label class="block text-sm font-bold text-slate-800 mb-2">02. 노란 벽돌 길 위에서 보고 싶은 얼굴</label>
+                    <p class="text-xs text-slate-500 mb-3 leading-relaxed">회오리바람을 맞고 험난한 길을 걸을 때마다, 문득 스쳐 지나간 얼굴이 있었을 것입니다. "지금 내 옆에 이 사람이 같이 걷고 있었다면 정말 든든했을텐데..."하고 떠올랐던 사람이 있을까요?</p>
+                    <textarea id="desc-2" required rows="3" placeholder="든든한 버팀목이 되어주는 사람이 있다면 적어주세요..." 
+                        class="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sage-600 focus:border-transparent transition"></textarea>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button onclick="submitDescriptive()" class="px-8 py-4 bg-amber-500 text-white rounded-xl text-sm font-bold shadow-md hover:bg-amber-600 transition">
+                        나의 내면 지도 완성하기 <i class="fa-solid fa-square-poll-vertical ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-results" class="w-full hidden fade-in">
+            
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+                
+                <!-- Premium Header -->
+                <div class="bg-sage-700 px-6 py-8 md:px-10 md:py-10 text-white flex flex-col md:flex-row justify-between items-center border-b-4 border-amber-500">
+                    <div class="text-center md:text-left mb-4 md:mb-0">
+                        <span class="text-xs font-bold tracking-widest text-amber-500 bg-white bg-opacity-10 px-3 py-1 rounded-full">PREMIUM REPORT</span>
+                        <h1 class="text-2xl md:text-3xl font-extrabold mt-2 tracking-tight">무의식의 숲에서 발견하는 4가지 자아</h1>
+                        <p class="text-sm text-sage-100 mt-1">Prepared by WHTB Mind Company &middot; <span id="report-date">2026-06-22</span></p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button onclick="window.print()" class="px-4 py-2 bg-white bg-opacity-15 rounded-lg text-xs font-semibold hover:bg-opacity-25 transition">
+                            <i class="fa-solid fa-print mr-1.5"></i> 인쇄 / PDF 저장
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Report Body -->
+                <div class="p-6 md:p-10 space-y-10">
+                    
+                    <!-- Profile Card -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+                        <!-- Profile text -->
+                        <div class="md:col-span-7 space-y-6 flex flex-col justify-between">
+                            <div>
+                                <h2 class="text-sm font-bold text-sage-600 tracking-wider uppercase border-l-4 border-amber-500 pl-2">내면 프로필 카드</h2>
+                                
+                                <div class="bg-sage-50 rounded-2xl p-5 border border-slate-100 space-y-3 mt-4">
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div><span class="text-slate-400 font-medium block text-xs">이름</span> <strong id="res-name" class="text-slate-800 text-base">홍길동</strong></div>
+                                        <div><span class="text-slate-400 font-medium block text-xs">나이</span> <strong id="res-age" class="text-slate-800 text-base">22세</strong></div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div><span class="text-slate-400 font-medium block text-xs">MBTI</span> <strong id="res-mbti" class="text-slate-800 text-base uppercase">ESTP</strong></div>
+                                        <div><span class="text-slate-400 font-medium block text-xs">심리 배터리</span> <strong id="res-battery" class="text-slate-800 text-base">100%</strong></div>
+                                    </div>
+                                    <div class="pt-2 border-t border-slate-200">
+                                        <span class="text-slate-400 font-medium block text-xs mb-1">나의 수호 자아</span>
+                                        <strong id="res-character" class="text-amber-600 text-lg font-bold">양철 나무꾼</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-2">핵심 키워드</h3>
+                                <div class="flex flex-wrap gap-1.5" id="res-keywords">
+                                    <!-- Dynamic Keywords -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-5 bg-gradient-to-br from-sage-50 to-amber-50 rounded-3xl p-6 border border-slate-100 text-center flex flex-col items-center justify-center min-h-[280px]">
+                            <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-3">My Inner Ego Asset</span>
+                            <div class="w-48 h-48 flex items-center justify-center overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100 p-2">
+                                <img id="character-img" src="양철 나무꾼.png" alt="수호 자아 캐릭터" 
+                                     class="max-w-full max-h-full object-contain transform hover:scale-105 transition-transform duration-300"
+                                     onerror="handleImageError(this)">
+                            </div>
+                            <h4 id="res-char-title" class="text-base font-extrabold text-sage-700 mt-4">따뜻한 조율사</h4>
+                        </div>
+                    </div>
+
+                    <!-- Character Description block -->
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                        <h3 class="text-xs font-bold text-slate-400 tracking-wider uppercase">대표 수호 자아 성향 소개</h3>
+                        <p id="res-char-desc" class="text-sm text-slate-700 leading-relaxed text-justify">
+                            대표 자아 소개글이 로드됩니다.
+                        </p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <h2 class="text-sm font-bold text-sage-600 tracking-wider uppercase border-l-4 border-amber-500 pl-2">4대 핵심 진단 영역</h2>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                            <!-- Gauge Card 1 -->
+                            <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm text-center flex flex-col items-center justify-between min-h-[220px]">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-1">도전 성향</span>
+                                
+                                <!-- Doughnut Chart Component -->
+                                <div class="relative w-24 h-24 my-3 flex items-center justify-center">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="48" cy="48" r="40" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
+                                        <circle id="gauge-circle-1" cx="48" cy="48" r="40" stroke="#ca9e2e" stroke-width="8" fill="transparent" 
+                                                stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                                    </svg>
+                                    <span id="gauge-percent-1" class="absolute text-sm font-extrabold text-slate-700">75%</span>
+                                </div>
+
+                                <span id="gauge-title-1" class="text-sm font-bold text-slate-800">로딩</span>
+                                <p class="text-[10px] text-slate-400 mt-1 leading-normal">미지의 기회를 포착하는 주도성</p>
+                            </div>
+
+                            <!-- Gauge Card 2 -->
+                            <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm text-center flex flex-col items-center justify-between min-h-[220px]">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-1">위기 관리</span>
+                                
+                                <div class="relative w-24 h-24 my-3 flex items-center justify-center">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="48" cy="48" r="40" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
+                                        <circle id="gauge-circle-2" cx="48" cy="48" r="40" stroke="#4a5c4e" stroke-width="8" fill="transparent" 
+                                                stroke-dasharray="251.2" stroke-dashoffset="125.6" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                                    </svg>
+                                    <span id="gauge-percent-2" class="absolute text-sm font-extrabold text-slate-700">50%</span>
+                                </div>
+
+                                <span id="gauge-title-2" class="text-sm font-bold text-slate-800">로딩</span>
+                                <p class="text-[10px] text-slate-400 mt-1 leading-normal">유혹 제어 및 에너지 배분 방식</p>
+                            </div>
+
+                            <!-- Gauge Card 3 -->
+                            <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm text-center flex flex-col items-center justify-between min-h-[220px]">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-1">대인 관계</span>
+                                
+                                <div class="relative w-24 h-24 my-3 flex items-center justify-center">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="48" cy="48" r="40" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
+                                        <circle id="gauge-circle-3" cx="48" cy="48" r="40" stroke="#ca9e2e" stroke-width="8" fill="transparent" 
+                                                stroke-dasharray="251.2" stroke-dashoffset="75.3" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                                    </svg>
+                                    <span id="gauge-percent-3" class="absolute text-sm font-extrabold text-slate-700">70%</span>
+                                </div>
+
+                                <span id="gauge-title-3" class="text-sm font-bold text-slate-800">로딩</span>
+                                <p class="text-[10px] text-slate-400 mt-1 leading-normal">소통 양식과 경계 제어력</p>
+                            </div>
+
+                            <!-- Gauge Card 4 -->
+                            <div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm text-center flex flex-col items-center justify-between min-h-[220px]">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-1">회복 탄력성</span>
+                                
+                                <div class="relative w-24 h-24 my-3 flex items-center justify-center">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="48" cy="48" r="40" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
+                                        <circle id="gauge-circle-4" cx="48" cy="48" r="40" stroke="#4a5c4e" stroke-width="8" fill="transparent" 
+                                                stroke-dasharray="251.2" stroke-dashoffset="50.2" stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                                    </svg>
+                                    <span id="gauge-percent-4" class="absolute text-sm font-extrabold text-slate-700">80%</span>
+                                </div>
+
+                                <span id="gauge-title-4" class="text-sm font-bold text-slate-800">로딩</span>
+                                <p class="text-[10px] text-slate-400 mt-1 leading-normal">과거 수용과 정서 복구탄성</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-sage-50 rounded-2xl p-6 border border-sage-100">
+                        <h3 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-3">한 줄 분석</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>🎯 <strong class="text-sage-700">도전 성향 :</strong> <span id="res-line-1">분석 대기 중</span></li>
+                            <li>🛡️ <strong class="text-sage-700">위기 관리 :</strong> <span id="res-line-2">분석 대기 중</span></li>
+                            <li>🤝 <strong class="text-sage-700">대인 관계 :</strong> <span id="res-line-3">분석 대기 중</span></li>
+                            <li>🔄 <strong class="text-sage-700">회복 탄력성 :</strong> <span id="res-line-4">분석 대기 중</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-8">
+                        <h2 class="text-sm font-bold text-sage-600 tracking-wider uppercase border-l-4 border-amber-500 pl-2">영역별 심층 분석 보고서</h2>
+                        
+                        <!-- Block 1: 도전 성향 -->
+                        <div class="bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm hover:shadow transition">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">1</div>
+                                <h3 class="text-base font-bold text-slate-800">도전 성향</h3>
+                            </div>
+                            <p id="res-detail-1" class="text-sm text-slate-600 leading-relaxed text-justify">
+                                도전 성향 정밀 분석 리포트입니다.
+                            </p>
+                        </div>
+
+                        <!-- Block 2: 위기 관리 -->
+                        <div class="bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm hover:shadow transition">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-sage-100 text-sage-600 flex items-center justify-center font-bold text-sm">2</div>
+                                <h3 class="text-base font-bold text-slate-800">위기 관리</h3>
+                            </div>
+                            <p id="res-detail-2" class="text-sm text-slate-600 leading-relaxed text-justify">
+                                위기 관리 정밀 분석 리포트입니다.
+                            </p>
+                        </div>
+
+                        <!-- Block 3: 대인 관계 -->
+                        <div class="bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm hover:shadow transition">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">3</div>
+                                <h3 class="text-base font-bold text-slate-800">대인 관계</h3>
+                            </div>
+                            <p id="res-detail-3" class="text-sm text-slate-600 leading-relaxed text-justify">
+                                대인 관계 정밀 분석 리포트입니다.
+                            </p>
+                        </div>
+
+                        <!-- Block 4: 회복 탄력성 -->
+                        <div class="bg-white border border-slate-100 rounded-2xl p-6 space-y-3 shadow-sm hover:shadow transition">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-sage-100 text-sage-600 flex items-center justify-center font-bold text-sm">4</div>
+                                <h3 class="text-base font-bold text-slate-800">회복 탄력성</h3>
+                            </div>
+                            <p id="res-detail-4" class="text-sm text-slate-600 leading-relaxed text-justify">
+                                회복 탄력성 정밀 분석 리포트입니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Narrative Reflection Output -->
+                    <div class="space-y-6">
+                        <h2 class="text-sm font-bold text-sage-600 tracking-wider uppercase border-l-4 border-amber-500 pl-2">기록된 밤의 성찰 (2부)</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="p-5 bg-slate-50 border border-slate-100 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-400 block mb-1">01. 얻은 가치와 버린 마음에 관한 사색</span>
+                                <p id="res-desc-1" class="text-sm text-slate-700 italic leading-relaxed text-justify">작성 내용이 없습니다.</p>
+                            </div>
+                            <div class="p-5 bg-slate-50 border border-slate-100 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-400 block mb-1">02. 험난한 여정길의 버팀목이 된 인물</span>
+                                <p id="res-desc-2" class="text-sm text-slate-700 italic leading-relaxed text-justify">작성 내용이 없습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 md:p-8 bg-gradient-to-r from-sage-600 to-sage-800 rounded-3xl text-white space-y-4">
+                        <h2 class="text-base font-bold uppercase tracking-wider text-amber-500"><i class="fa-solid fa-compass mr-2"></i> 나의 내면 성장 방향성 (Strategic Roadmap)</h2>
+                        <p id="res-roadmap-text" class="text-sm text-sage-100 leading-relaxed text-justify">
+                            내담자를 위한 로드맵 조언이 삽입됩니다.
+                        </p>
+                        <div class="pt-4 border-t border-sage-500 flex flex-col sm:flex-row justify-between items-center text-xs text-sage-200">
+                            <span>WHTB Mind Studio &middot; Premium Psychological Consultation Sheet</span>
+                            <span class="mt-2 sm:mt-0 font-serif italic text-amber-500">"The journey is the heart of home."</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer with restart option -->
+                <div class="bg-slate-50 p-6 text-center border-t border-slate-100">
+                    <button onclick="restartTest()" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-bold rounded-xl transition">
+                        <i class="fa-solid fa-arrow-rotate-left mr-1.5"></i> 새로운 모험 다시 시작하기
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="text-center py-6 text-xs text-slate-400 font-medium">
+        <p>&copy; 2026 WHTB Mind Test Studio. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // 12 Multiple-Choice Questions Database with custom choices (A/B or A/B/C)
+        const questions = [
+            {
+                num: 1,
+                title: "회오리바람이 휘몰아친 날",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "어느 날 갑자기 엄청난 회오리바람이 불어와, 당신이 있는 집을 통째로 휩쓸어 버렸습니다. 바람을 타고 날아온 집이 어딘가에 ‘쿵!’ 하고 착륙한 순간, 문을 열기 직전 당신의 생각은?",
+                options: [
+                    { key: "A", text: "밖은 어떤 곳일까? 일단 나가서 구경부터 하자!" },
+                    { key: "B", text: "위험할지 몰라. 무슨 일이 일어난 건지 일단 상황을 지켜보자." }
+                ]
+            },
+            {
+                num: 2,
+                title: "마녀의 은구두",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "밖으로 나가니 아름다운 풍경과 함께 착한 마녀가 당신을 반깁니다. 집 아래에 깔려 사라진 동쪽 마녀의 유품이라며 번쩍이는 '은구두'를 건네줄 때 당신의 반응은?",
+                options: [
+                    { key: "A", text: "은구두..? 공짜 선물인데, 기분 좋게 받아야지!" },
+                    { key: "B", text: "마녀가 신었던 구두인데다가 마녀가 주는 선물이라니.. 찜찜한데 그냥 받지 말자." }
+                ]
+            },
+            {
+                num: 3,
+                title: "노란 벽돌 길 위의 동반자",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "오즈의 마법사를 만나러 가는 길은 멀고 험난하여 동행할 동료가 필요합니다. 당신은 다음 중 어떤 동료와 가장 먼저 손을 잡고 출발하시겠습니까?",
+                options: [
+                    { key: "A", text: "뇌가 없어 지혜를 구하는 허수아비 (이성적 판단과 전략)" },
+                    { key: "B", text: "용기가 없어 두려움을 이겨내고 싶은 겁쟁이 사자 (행동력과 추진력)" },
+                    { key: "C", text: "심장이 없어 따뜻한 마음을 구하는 양철나무꾼 (정서적 교류와 공감)" }
+                ]
+            },
+            {
+                num: 4,
+                title: "달콤한 양귀비 꽃밭의 유혹",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "길을 걷다 보니 붉은 양귀비 꽃밭이 나타납니다. 향기로운 꽃향기에 온몸의 긴장이 풀리고 깊은 잠이 쏟아집니다. 마법성까지는 아직 갈 길이 먼 상황, 당신의 선택은?",
+                options: [
+                    { key: "A", text: "\"조금만 쉬었다 가자.\" 지친 몸과 마음을 위해 잠시 달콤한 휴식을 취한다." },
+                    { key: "B", text: "\"여기 머무르면 못 깨어날지도 몰라.\" 정신을 바짝 차리고 꽃밭을 신속히 빠져나간다." }
+                ]
+            },
+            {
+                num: 5,
+                title: "서쪽 마녀의 습격",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "울창한 숲을 지나가던 중, 저 멀리서 적대적인 서쪽 마녀와 부하들이 길을 가로막습니다. 예상치 못한 위험과 마주한 순간 당신이 취할 행동은?",
+                options: [
+                    { key: "A", text: "\"내 갈 길이 먼저야.\" 단호하게 정면 돌파하여 그들을 쫓아낸다." },
+                    { key: "B", text: "안전이 제일이다. 일단 덤불 뒤로 몸을 숨긴 뒤 마녀 일행이 지나갈 때까지 기다린다." },
+                    { key: "C", text: "\"원하는 게 무엇인지 대화해 보자.\" 타협점을 찾기 위해 소통을 시도한다." }
+                ]
+            },
+            {
+                num: 6,
+                title: "동료의 멈춘 발걸음",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "에메랄드 성을 코앞에 두고 동료가 자리에 주저앉습니다. \"거기 간다고 해결이 될까? 난 안 될 거야...\"라며 무기력에 빠진 동료를 향해 당신이 건넬 위로는?",
+                options: [
+                    { key: "A", text: "\"지금까지 잘해왔잖아! 거의 다 왔으니 다시 힘내서 가보자!\" (목표 격려)" },
+                    { key: "B", text: "\"그동안 불안했던 네 마음 다 이해해.\" (감정 공감)" },
+                    { key: "C", text: "동료의 강점을 하나씩 짚어주며 현실적인 해결책과 자신감을 심어준다. (이성적 해결)" }
+                ]
+            },
+            {
+                num: 7,
+                title: "머나먼 고향의 기억",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "성문 앞에서 밤을 지새우며 모닥불을 바라보는데, 두고 온 집과 가족들의 실루엣이 머릿속을 스칩니다. 이때 당신의 내면에 가장 크게 밀려오는 감정은?",
+                options: [
+                    { key: "A", text: "\"나 없으면 다들 걱정할 텐데..\" 가족들이 느낄 슬픔과 염려가 내 감정보다 앞선다." },
+                    { key: "B", text: "\"집에 가면 언제나처럼 안전하고 편안하겠지?\" 무조건적인 안식처에 대한 안도감이 든다." },
+                    { key: "C", text: "\"모험을 통해 부쩍 성장한 내 모습을 보면 놀라겠지?\" 스스로에 대한 뿌듯함이 밀려온다." }
+                ]
+            },
+            {
+                num: 8,
+                title: "에메랄드 성의 첫 관문",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "마침내 도착한 에메랄드 성의 수문장이 눈부신 빛으로부터 눈을 보호해야 한다며 정체불명의 '초록색 안경'을 강제로 쓰라고 요구합니다. 당신의 선택은?",
+                options: [
+                    { key: "A", text: "\"성에 들어가기 위해서라면 어쩔 수 없지.\" 순순히 안경을 쓰고 들어간다." },
+                    { key: "B", text: "\"무슨 꿍꿍이가 있는 게 분명해!\" 규칙이고 뭐고 일단 쓰지 않고 버텨본다." }
+                ]
+            },
+            {
+                num: 9,
+                title: "마법사 오즈의 무리한 요구",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "위엄 넘치는 모습으로 나타난 오즈의 마법사는 고향으로 보내주는 대가로, 서쪽의 나쁜 마녀를 먼저 물리치고 오라는 무리한 조건을 내겁니다. 이때 당신의 태도는?",
+                options: [
+                    { key: "A", text: "\"고향에 가려면 어쩔 수 없지.\" 지금까지 함께한 동료들과 힘을 합쳐 당장 출발한다." },
+                    { key: "B", text: "\"우리를 순수하게 이용해 먹으려는 속셈이 분명해.\" 다른 대안이 없는지 찾아본다." }
+                ]
+            },
+            {
+                num: 10,
+                title: "오즈의 실체와 비밀 협상",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "가까스로 마녀를 물리치고 돌아왔으나 오즈의 실체는 초라한 사기꾼 노인이었습니다. 분노한 동료들 뒤로 노인이 다가와 자신을 비밀리에 지켜달라며 은밀한 보상을 제안합니다.",
+                options: [
+                    { key: "A", text: "어차피 목적지에 도달했으니 서로 윈윈할 수 있도록 노인의 제안을 타협하고 수용한다." },
+                    { key: "B", text: "우리를 속인 대가는 달다! 노인의 부정한 제안을 칼같이 거절하고 응징한다." }
+                ]
+            },
+            {
+                num: 11,
+                title: "황금 모자와 날개 달린 원숭이",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "오즈가 떠난 후 고향으로 갈 방법을 찾다 길가에서 원하는 곳으로 데려다주는 원숭이를 부를 수 있는 '황금 모자'를 주웠습니다. 사용하기 전 당신의 진짜 심정은?",
+                options: [
+                    { key: "A", text: "\"드디어 편하게 갈 수 있는 지름길이 생겼다!\" 의심 없이 바로 사용한다." },
+                    { key: "B", text: "\"이 정체불명의 원숭이들이 나를 정말 안전하고 확실하게 데려다줄까?\" 불안하다." }
+                ]
+            },
+            {
+                num: 12,
+                title: "은구두의 진짜 비밀",
+                category: "1부: 노란 벽돌 길 위의 선택",
+                scenario: "집으로 돌아온 후, 마녀에게 '은구두'의 뒷굽을 세 번 부딪치기만 하면 언제든 집으로 바로 돌아갈 수 있었다는 숨겨진 비밀을 뒤늦게 알게 되었습니다. 당신의 생각은?",
+                options: [
+                    { key: "A", text: "비록 돌아와서 알게 되었지만, 길 위에서의 고생과 여정은 정말 값진 경험이었어!" },
+                    { key: "B", text: "처음부터 알았으면 이 끔찍한 고생을 안 했을 텐데! 너무 허탈하고 억울하다." }
+                ]
+            }
+        ];
+
+        // State variables
+        let userInfo = { name: '', age: '', mbti: '', battery: '' };
+        let answers = {};
+        let currentQuestionIdx = 0;
+
+        // Image fallbacks if local files fail to load
+        const fallbackPlaceholders = {
+            '도로시.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Dorothy',
+            '허수아비.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Scarecrow',
+            '양철 나무꾼.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Tin+Woodman',
+            '겁쟁이 사자.png': 'https://placehold.co/400x400/f0e6d2/4a5c4e?text=Cowardly+Lion'
+        };
+
+        function handleImageError(img) {
+            const srcFilename = decodeURIComponent(img.getAttribute('src'));
+            if (fallbackPlaceholders[srcFilename]) {
+                img.src = fallbackPlaceholders[srcFilename];
+            } else {
+                img.src = "https://placehold.co/400x400/cbdad0/4a5c4e?text=WHTB+MIND";
+            }
+        }
+
+        function startTest() {
+            userInfo.name = document.getElementById('user-name').value;
+            userInfo.age = document.getElementById('user-age').value;
+            userInfo.mbti = document.getElementById('user-mbti').value;
+            userInfo.battery = document.querySelector('input[name="battery"]:checked').value;
+
+            document.getElementById('screen-info').classList.add('hidden');
+            document.getElementById('screen-questions').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIdx];
+            
+            // Progress calculations
+            const totalQ = questions.length;
+            const progressPercent = Math.round(((currentQuestionIdx + 1) / totalQ) * 100);
+            document.getElementById('question-progress-text').innerText = `문항 ${currentQuestionIdx + 1} / ${totalQ}`;
+            document.getElementById('question-percent-text').innerText = `${progressPercent}%`;
+            document.getElementById('question-progress-bar').style.width = `${progressPercent}%`;
+
+            // Titles
+            document.getElementById('question-category').innerText = q.category;
+            document.getElementById('question-title').innerText = `${q.num.toString().padStart(2, '0')}. ${q.title}`;
+            document.getElementById('question-scenario').innerText = q.scenario;
+
+            // Option lists
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const isSelected = answers[q.num] === opt.key;
+                const optButton = document.createElement('button');
+                optButton.type = "button";
+                optButton.className = `w-full text-left p-4 rounded-2xl border text-sm transition flex items-start space-x-3 ${
+                    isSelected 
+                    ? 'border-sage-600 bg-sage-50 text-sage-800 font-bold ring-2 ring-sage-600 ring-opacity-20' 
+                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                }`;
+                
+                optButton.innerHTML = `
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full border text-xs font-bold shrink-0 ${
+                        isSelected ? 'bg-sage-600 border-sage-600 text-white' : 'border-slate-300 text-slate-400 bg-slate-50'
+                    }">${opt.key}</span>
+                    <span class="leading-relaxed">${opt.text}</span>
+                `;
+                
+                optButton.onclick = () => selectOption(q.num, opt.key);
+                container.appendChild(optButton);
+            });
+
+            // Adjust navigation control
+            const btnPrev = document.getElementById('btn-prev');
+            if (currentQuestionIdx === 0) {
+                btnPrev.classList.add('opacity-30', 'pointer-events-none');
+            } else {
+                btnPrev.classList.remove('opacity-30', 'pointer-events-none');
+            }
+        }
+
+        function selectOption(qNum, key) {
+            answers[qNum] = key;
+            renderQuestion();
+
+            // Next question delay
+            setTimeout(() => {
+                if (currentQuestionIdx < questions.length - 1) {
+                    currentQuestionIdx++;
+                    renderQuestion();
+                } else {
+                    document.getElementById('screen-questions').classList.add('hidden');
+                    document.getElementById('screen-descriptive').classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 250);
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIdx > 0) {
+                currentQuestionIdx--;
+                renderQuestion();
+            }
+        }
+
+        function submitDescriptive() {
+            const d1 = document.getElementById('desc-1').value.trim();
+            const d2 = document.getElementById('desc-2').value.trim();
+
+            if (!d1 || !d2) {
+                const msg = document.createElement('div');
+                msg.className = "fixed bottom-5 right-5 bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-semibold z-50 fade-in";
+                msg.innerHTML = "📝 두 서술형 질문에 답변을 채워주세요!";
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 2500);
+                return;
+            }
+
+            userInfo.desc1 = d1;
+            userInfo.desc2 = d2;
+
+            // Generate results and show dashboard
+            calculateResults();
+
+            document.getElementById('screen-descriptive').classList.add('hidden');
+            document.getElementById('screen-results').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function animateGauge(gaugeId, score) {
+            const circle = document.getElementById(`gauge-circle-${gaugeId}`);
+            const text = document.getElementById(`gauge-percent-${gaugeId}`);
+            if (!circle || !text) return;
+
+            // Radius is 40. Circumference is 2 * Math.PI * 40 ≈ 251.2
+            const circumference = 251.2;
+            const offset = circumference - (score / 100) * circumference;
+            
+            circle.style.strokeDashoffset = offset;
+            text.innerText = `${score}%`;
+        }
+
+        function calculateResults() {
+            document.getElementById('res-name').innerText = userInfo.name;
+            document.getElementById('res-age').innerText = `${userInfo.age}세`;
+            document.getElementById('res-mbti').innerText = userInfo.mbti;
+            document.getElementById('res-battery').innerText = userInfo.battery;
+            document.getElementById('report-date').innerText = new Date().toISOString().substring(0, 10);
+
+            document.getElementById('res-desc-1').innerText = `"${userInfo.desc1}"`;
+            document.getElementById('res-desc-2').innerText = `"${userInfo.desc2}"`;
+
+            // Calculate affinity score per classic Oz persona
+            let scoreDorothy = 0;
+            let scoreScarecrow = 0;
+            let scoreWoodman = 0;
+            let scoreLion = 0;
+
+            // Q1, Q2 (Challenge Style metrics)
+            if (answers[1] === 'A') { scoreDorothy += 2; scoreLion += 1; }
+            if (answers[1] === 'B') { scoreScarecrow += 1; scoreWoodman += 1; }
+            if (answers[2] === 'A') { scoreDorothy += 2; scoreWoodman += 1; }
+            if (answers[2] === 'B') { scoreScarecrow += 1; scoreLion += 1; }
+
+            // Q3 (Ego Identity)
+            if (answers[3] === 'A') scoreScarecrow += 4;
+            if (answers[3] === 'B') scoreLion += 4;
+            if (answers[3] === 'C') scoreWoodman += 4;
+
+            // Q4 (Poppy field focus check)
+            if (answers[4] === 'A') scoreWoodman += 2;
+            if (answers[4] === 'B') { scoreLion += 2; scoreScarecrow += 1; }
+
+            // Q5 (Witch defense strategy)
+            if (answers[5] === 'A') scoreLion += 2;
+            if (answers[5] === 'C') scoreWoodman += 2;
+            if (answers[5] === 'C') scoreScarecrow += 1;
+
+            // Q6 (Interpersonal rescue dialogues)
+            if (answers[6] === 'A') scoreLion += 1;
+            if (answers[6] === 'B') scoreWoodman += 2;
+            if (answers[6] === 'C') scoreScarecrow += 2;
+
+            // Q7 (Hometown affection metrics)
+            if (answers[7] === 'A') scoreWoodman += 2;
+            if (answers[7] === 'B') scoreDorothy += 1;
+            if (answers[7] === 'C') scoreDorothy += 2;
+
+            // Q12 (Final evaluation)
+            if (answers[12] === 'A') scoreDorothy += 2;
+            if (answers[12] === 'B') scoreScarecrow += 1;
+
+            // Resolve representative ego personality
+            let finalCharacter = 'tin_woodman';
+            let charName = '양철 나무꾼';
+            let charTitle = '따뜻한 조율사';
+            let charDesc = '';
+            let keywords = [];
+            let imageFile = "양철 나무꾼.png";
+
+            const maxScore = Math.max(scoreDorothy, scoreScarecrow, scoreWoodman, scoreLion);
+
+            if (maxScore === scoreDorothy) {
+                finalCharacter = 'dorothy';
+                charName = '도로시';
+                charTitle = '용감한 개척자';
+                charDesc = "주변의 어떤 곤경에서도 길을 잃지 않고 앞으로 나아가며, 자신의 길을 직접 개척하는 강인한 영혼입니다. 본질적인 정서적 안정감을 바탕으로 목표를 위해 뚜렷한 주도성을 보여주는 모험가입니다.";
+                keywords = ["#용감한_개척자", "#목표_지향", "#강인한_의지", "#정면_돌파", "#자아_성장", "#안정적_애착", "#도전형_멘탈"];
+                imageFile = "도로시.png";
+            } else if (maxScore === scoreScarecrow) {
+                finalCharacter = 'scarecrow';
+                charName = '허수아비';
+                charTitle = '현명한 탐구자';
+                charDesc = "지혜와 논리를 소중히 여기며, 복잡한 위기가 닥쳤을 때 냉철한 사고와 뛰어난 분석력으로 돌파구를 마련합니다. 감정에 휩쓸리지 않고 항상 현실적인 대안(Plan B)을 모색하는 이성적인 전략가스타일 입니다.";
+                keywords = ["#현명한_탐구자", "#논리적_사고", "#분석적_해결", "#전략적_대처", "#이성적_통제", "#독립적_판단", "#신중파_멘탈"];
+                imageFile = "허수아비.png";
+            } else if (maxScore === scoreLion) {
+                finalCharacter = 'lion';
+                charName = '겁쟁이 사자';
+                charTitle = '용감한 행동가';
+                charDesc = "평소에는 조심스럽고 신중해 보이지만, 진짜 위기나 소중한 동료를 지켜야 하는 순간에는 누구보다 앞장서서 힘을 발휘하는 뜨거운 용기를 감추고 있습니다. 실천적 의리가 뛰어난 행동파스타일 입니다.";
+                keywords = ["#내재된_용기", "#강력한_추진력", "#정직한_소통", "#위기_극복", "#동료애", "#독립형_스타일", "#성장형_멘탈"];
+                imageFile = "겁쟁이 사자.png";
+            } else {
+                finalCharacter = 'tin_woodman';
+                charName = '양철 나무꾼';
+                charTitle = '따뜻한 조율사';
+                charDesc = "관계와 사회생활 속에서 정서적인 교류와 깊은 공감을 최고의 가치로 여깁니다. 주변 사람들과 따뜻한 유대감을 형성하고, 서로의 마음이 연결되어 있다고 느낄 때 안정감을 느끼는 따뜻한 치유자스타일 입니다.";
+                keywords = ["#영리한_행동파", "#따뜻한_유대감", "#유혹_차단", "#전략적_우회", "#자기_신뢰", "#독립적_자아", "#성숙한_멘탈"];
+                imageFile = "양철 나무꾼.png";
+            }
+
+            // Update details
+            document.getElementById('res-character').innerText = charName;
+            document.getElementById('res-char-title').innerText = charTitle;
+            document.getElementById('res-char-desc').innerText = charDesc;
+            
+            // Set local image file name inside the showcase frame
+            const characterImgElement = document.getElementById('character-img');
+            characterImgElement.setAttribute('src', imageFile);
+
+            // Re-render keywords tag list
+            const kwContainer = document.getElementById('res-keywords');
+            kwContainer.innerHTML = '';
+            keywords.forEach(kw => {
+                const kwSpan = document.createElement('span');
+                kwSpan.className = "text-xs font-bold text-sage-600 bg-sage-50 border border-sage-100 px-2.5 py-1 rounded-lg shadow-sm hover:bg-sage-100 transition duration-150 cursor-pointer";
+                kwSpan.innerText = kw;
+                kwContainer.appendChild(kwSpan);
+            });
+
+            let d1Score = 50;
+            let dev1Title = '관찰자';
+            let dev1Line = '상황을 예리하게 검토한 뒤 실리를 확실하게 거두는 신중형';
+            let dev1Text = '갑작스러운 환경 변화 앞에서 일단 숨을 죽이고 예리하게 상황을 관찰하는 조심성을 가집니다. 그러나 호기심을 유발하거나 명확한 가치가 입증된 실리(은구두)가 보장될 때는 기회를 놓치지 않고 과감하게 품에 안는 분석가 스타일입니다.';
+            
+            if (answers[1] === 'A' && answers[2] === 'A') {
+                d1Score = 100;
+                dev1Title = "개척가";
+                dev1Line = "적극적이고 대담하게 나아가는 전형적인 개척형 자아";
+                dev1Text = "당신은 새로운 도전과 예기치 못한 환경 변화(회오리바람)를 마주했을 때 망설임 없이 앞으로 나아갑니다. 기회(은구두)가 주어졌을 때 의심하기보다는 적극적으로 받아들이고 즐기는 '행동주의적 개척가' 성향이 뚜렷합니다.";
+            } else if (answers[1] === 'A' && answers[2] === 'B') {
+                d1Score = 75;
+                dev1Title = "전략가";
+                dev1Line = "시작은 대담하나 리스크를 치밀하게 조율하는 스마트 전략가";
+                dev1Text = "도전 자체에는 거침없이 과감하게 첫발을 내디디지만, 그 속에서 찾아오는 여러 조건(은구두)들에 대해서는 치밀하게 계산하고 리스크를 최소화하려는 훌륭한 '전략적 균형 감각'을 갖춘 전략가입니다.";
+            } else if (answers[1] === 'B' && answers[2] === 'B') {
+                d1Score = 30;
+                dev1Title = "순응형";
+                dev1Line = "검증된 경로와 규칙을 따르며 안정적인 판을 유지하는 신중파";
+                dev1Text = "불확실한 모험이나 리스크에 자신을 노출하기보다 규칙을 준수하고 안정성이 증명된 길을 지향합니다. 예상치 못한 위험 부담을 완벽히 차단하고 통제 영역 내에서 안정을 꾀하는 보수적 수호자 유형입니다.";
+            }
+
+            let d2Score = 60;
+            let dev2Title = '소통가';
+            let dev2Line = '위기 국면일수록 서로의 안위와 심리적 안식을 가장 먼저 돌보는 정서형';
+            let dev2Text = '당신은 위기 상황이 닥치면 문제 해결 이전에 나와 동료들의 마음 상태와 공감대를 다지는 것이 훨씬 본질적이라 믿습니다. 따뜻한 충전과 연대를 이끌어내는 치유자의 위기 관리 방식을 보입니다.';
+            
+            const q3Val = answers[3];
+            const q4Val = answers[4];
+
+            if (q3Val === 'A' && q4Val === 'A') {
+                d2Score = 70;
+                dev2Title = "이성적 성찰가";
+                dev2Line = "지혜를 찾으며 재충전의 기회를 적절히 도모하는 현명한 심사숙고형";
+                dev2Text = "당신은 이성적 판단과 전략을 중요하게 생각하면서도, 위기가 장기화되었을 때는 적절히 쉬어가며 효율을 올려야 한다는 유연한 마인드를 지니고 있습니다. 무리한 질주보다 자기 점검의 여유를 가집니다.";
+            } else if (q3Val === 'A' && q4Val === 'B') {
+                d2Score = 90;
+                dev2Title = "분석적 해결사 / 성취가";
+                dev2Line = "냉철한 이성을 바탕으로 목표 달성을 완벽히 통제하는 냉철한 성취주의자";
+                dev2Text = "위기 국면에서 흔들리지 않는 차가운 머리를 가졌으며, 설정한 목표에 도달하기 위해 달콤한 유혹(양귀비 꽃밭)을 필사적으로 제어하고 시간과 에너지를 극도로 아끼고 관리하는 철저한 해결사입니다.";
+            } else if (q3Val === 'B' && q4Val === 'A') {
+                d2Score = 80;
+                dev2Title = "행동형 성찰가";
+                dev2Line = "뜨거운 추진력을 발휘하되 최적의 브레이크 시점을 조율하는 전략가";
+                dev2Text = "기본적으로 행동력과 모험정신이 넘치지만, 고도의 과부하 스트레스가 누적되면 자신과 동료들을 지키기 위해 기꺼이 지혜로운 멈춤(휴식)을 선택할 수 있는 유연한 에너지를 지닌 성찰가입니다.";
+            } else if (q3Val === 'B' && q4Val === 'B') {
+                d2Score = 95;
+                dev2Title = "행동형 리더 / 성취가";
+                dev2Line = "위기 상황을 온몸으로 받아치며 목표지점까지 쉬지 않고 돌격하는 불도저";
+                dev2Text = "어떠한 장애물이나 긴장 유발 유혹에도 한눈팔지 않고 돌진합니다. 문제 상황이 터질수록 더욱 과감하게 자아와 에너지를 통제하고, 신속하게 극복하여 성과를 쟁취해내는 단호한 행동형 리더입니다.";
+            }
+
+            let d3Score = 50;
+            let dev3Title = '소통형 / 공감가';
+            let dev3Line = '마음을 기꺼이 열어 상대방에게 가장 깊고 따뜻한 안식을 선물하는 조력자';
+            let dev3Text = '당신은 누군가 어려움이나 마음의 상처를 입었을 때, 섣부른 조언 대신 온전히 그의 감정 상태를 수용하고(이해해) 안아주는 따뜻한 위로자입니다. 관계 네트워크 속에서 충전됩니다.';
+            
+            let pointsIndependent = 0;
+            let pointsSocial = 0;
+            let pointsAnalytic = 0;
+
+            if (answers[5] === 'A') pointsIndependent += 2;
+            if (answers[5] === 'B') pointsSocial += 2;
+            if (answers[5] === 'C') pointsAnalytic += 2;
+
+            if (answers[6] === 'A') pointsIndependent += 1;
+            if (answers[6] === 'B') pointsSocial += 2;
+            if (answers[6] === 'C') pointsAnalytic += 2;
+
+            if (answers[7] === 'A') pointsSocial += 1;
+            if (answers[7] === 'B') pointsSocial += 2;
+            if (answers[7] === 'C') pointsIndependent += 2;
+
+            const maxSocialPoints = Math.max(pointsIndependent, pointsSocial, pointsAnalytic);
+
+            if (maxSocialPoints === pointsAnalytic) {
+                d3Score = 75;
+                dev3Title = "분석가";
+                dev3Line = "논리적 대안과 협상을 조율하는 균형 지향형 스타일";
+                dev3Text = "당신은 타인과의 트러블(서쪽 마녀)에 있어 무작정 싸우거나 피하기보다는 대화와 타협을 우선 시도합니다. 슬픔이나 무기력에 빠진 동료를 마주할 때는 감정의 전염을 차단하고 팩트 중심의 이성적이고 현실적인 로드맵을 제공합니다.";
+            } else if (maxSocialPoints === pointsIndependent) {
+                d3Score = 85;
+                dev3Title = "독립형 스타일";
+                dev3Line = "나만의 주도권을 단단히 쥐고 대승적 연대를 구축하는 독립자아형";
+                dev3Text = "당신은 대인관계에 있어 자신만의 경계선을 뚜렷하게 다스릴 줄 아는 독립적인 자아를 지녔습니다. 타인과의 부당한 갈등 앞에서는 대담하게 정면 돌파하며 스스로 해결할 수 있도록 큰 격려를 불어넣습니다.";
+            }
+
+            let d4Score = 40;
+            let dev4Title = '신중파 / 현실주의자';
+            let dev4Line = '기회비용을 면밀하게 검토하며 미래의 위험 부담을 사전 차단하는 철저함';
+            let dev4Text = '새로운 기회 앞에서도 항상 다각도에서 안전성을 신중히 검토하며, 일의 효율성과 기회비용을 면밀히 챙깁니다. 이미 지나간 시행착오에 대해 다소간의 아쉬움을 깊게 느끼기도 하지만, 그 신중함 덕분에 다음 여정에서 손실을 방지합니다.';
+            
+            let positiveCount = 0;
+            if (answers[8] === 'B') positiveCount++;
+            if (answers[9] === 'B') positiveCount++;
+            if (answers[10] === 'B') positiveCount++;
+            if (answers[11] === 'A') positiveCount++;
+            if (answers[12] === 'A') positiveCount++;
+
+            if (positiveCount >= 3) {
+                d4Score = 80;
+                dev4Title = "독립형 자아 / 긍정 수용형";
+                dev4Line = "여정길의 온갖 풍파조차 내 성장을 돕는 값진 자양분으로 승화시키는 멘탈";
+                dev4Text = "지나간 일(은구두의 비밀)에 얽매여 억울해하기보다 그것을 나의 소중한 인생 경험과 성장이라는 훈장으로 긍정적으로 소화해내는 능력이 탁월합니다. 과거의 상처에서 빠르게 회복하여 다음 목적지를 설정합니다.";
+            }
+
+            // Trigger Gauges animation
+            animateGauge(1, d1Score);
+            animateGauge(2, d2Score);
+            animateGauge(3, d3Score);
+            animateGauge(4, d4Score);
+
+            // Bind values in the cards
+            document.getElementById('gauge-title-1').innerText = dev1Title;
+            document.getElementById('gauge-title-2').innerText = dev2Title;
+            document.getElementById('gauge-title-3').innerText = dev3Title;
+            document.getElementById('gauge-title-4').innerText = dev4Title;
+
+            // One-line analytics dashboard elements
+            document.getElementById('res-line-1').innerText = dev1Line;
+            document.getElementById('res-line-2').innerText = dev2Line;
+            document.getElementById('res-line-3').innerText = dev3Line;
+            document.getElementById('res-line-4').innerText = dev4Line;
+
+            // Detailed descriptions text injection
+            document.getElementById('res-detail-1').innerText = dev1Text;
+            document.getElementById('res-detail-2').innerText = dev2Text;
+            document.getElementById('res-detail-3').innerText = dev3Text;
+            document.getElementById('res-detail-4').innerText = dev4Text;
+
+            // Directional Roadmap and strategic instructions formulation
+            let roadmapText = "";
+            if (maxScore === scoreDorothy) {
+                roadmapText = `용감한 개척자 ${userInfo.name}님을 위한 내면 성장 나침반:\n` +
+                    "당신은 스스로 상황을 헤쳐나가는 놀라운 돌파력과 추진력을 가졌습니다. 하지만 때로는 모든 것을 내 어깨 위에만 짊어지려는 과도한 주체적 성향이 피로를 누적시킬 수 있습니다. 오즈의 여정에 든든한 동료들이 함께했듯, 마음이 조급해질 때일수록 나의 약한 감정을 타인에게 편안히 개방하고 도움을 구해보세요. 그것이 당신의 개척 속도를 더 지속 가능하게 만들어줄 전략적 비밀무기입니다.";
+            } else if (maxScore === scoreScarecrow) {
+                roadmapText = `현명한 탐구자 ${userInfo.name}님을 위한 내면 성장 나침반:\n` +
+                    "당신의 냉철한 머리와 완벽한 분석 능력은 많은 사람들에게 든든한 이성적 해답을 안겨줍니다. 하지만 현실의 모든 장벽을 혼자서 규칙과 설계만으로 헤쳐가다 보면 정서적 메마름이나 타인의 감정적 섭섭함을 마주할 수 있습니다. 때로는 정답이 정해져 있지 않은 모순적인 감정 상태(슬픔, 공감)를 있는 그대로 그냥 느껴보세요. 내면의 틈을 허락할 때, 당신의 지혜는 더 깊고 울림 있는 가치로 확장될 것입니다.";
+            } else if (maxScore === scoreLion) {
+                roadmapText = `용감한 행동가 ${userInfo.name}님을 위한 내면 성장 나침반:\n` +
+                    "행동파 리더로서의 과감함과 위기 속 의리 있는 태도는 정말 든든한 매력입니다. 다만 목표 중심적 돌격 성향 때문에, 위기 상황이 닥치면 스스로를 과도하게 채찍질하며 통제하려는 극단적 과부하가 올 수 있습니다. 양귀비 꽃밭에서 동료들과 조율하며 쉬어가야 했던 것처럼, 목적지 직전에는 의식적으로 속도를 줄이고 나만의 안전기지(방)에서 온전한 충전을 만끽하는 휴식을 일상에 적극 도입해보시길 권장합니다.";
+            } else {
+                roadmapText = `따뜻한 조율사 ${userInfo.name}님을 위한 내면 성장 나침반:\n` +
+                    "공감과 유대감을 바탕으로 타인을 보듬는 치유의 손길은 사람을 끄는 당신만의 귀한 달란트입니다. 다만 타인의 무기력함이나 부정적인 슬픔을 마치 내 것인 양 너무 깊이 스펀지처럼 흡수하여, 정작 내 마음의 배터리가 소진될 위험이 있습니다. 건강한 관계를 지속하기 위해서는 '공감의 깊이만큼 정서적 경계선'을 단호히 세울 줄 알아야 합니다. 나를 먼저 단단하게 지키는 경계선 연습이 당신의 성숙한 멘탈을 완벽하게 완성해 줄 것입니다.";
+            }
+
+            document.getElementById('res-roadmap-text').innerText = roadmapText;
+        }
+
+        function restartTest() {
+            // Reset state
+            userInfo = { name: '', age: '', mbti: '', battery: '' };
+            answers = {};
+            currentQuestionIdx = 0;
+            
+            document.getElementById('desc-1').value = '';
+            document.getElementById('desc-2').value = '';
+
+            document.getElementById('screen-results').classList.add('hidden');
+            document.getElementById('screen-info').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
